@@ -2,8 +2,8 @@ var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
 window.addEventListener("keydown", keyDown);
-
-
+canvas.width = 700;
+canvas.height = 700
 
 ctx.font = "30px Arial";
 
@@ -32,85 +32,37 @@ function line(x1, y1, x2, y2) {
 
 }
 
-// Arrows
-function leftArrow(arrowX, arrowY) {
-  ctx.beginPath();
-  ctx.moveTo(arrowX, arrowY);
-  ctx.lineTo(arrowX + 50, arrowY)
-  ctx.moveTo(arrowX, arrowY);
-  ctx.lineTo(arrowX + 20, arrowY - 10);
-  ctx.moveTo(arrowX, arrowY);
-  ctx.lineTo(arrowX + 20, arrowY + 10);
-  ctx.stroke();
-}
+function drawArrows(arrowsX, arrowsY) {
 
-function rightArrow(arrowX, arrowY) {
-  ctx.beginPath();
-  ctx.moveTo(arrowX, arrowY);
-  ctx.lineTo(arrowX - 50, arrowY)
-  ctx.moveTo(arrowX, arrowY);
-  ctx.lineTo(arrowX - 20, arrowY - 10);
-  ctx.moveTo(arrowX, arrowY);
-  ctx.lineTo(arrowX - 20, arrowY + 10);
-  ctx.stroke();
-}
-
-function upArrow(arrowX, arrowY) {
-  arrowX += 8;
-  ctx.beginPath();
-  ctx.moveTo(arrowX, arrowY);
-  ctx.lineTo(arrowX, arrowY + 50)
-  ctx.moveTo(arrowX, arrowY);
-  ctx.lineTo(arrowX + 10, arrowY + 20);
-  ctx.moveTo(arrowX, arrowY);
-  ctx.lineTo(arrowX - 10, arrowY + 20);
-  ctx.stroke();
-}
-
-function downArrow(arrowX, arrowY) {
-  arrowX -= 7;
-  ctx.beginPath();
-  ctx.moveTo(arrowX, arrowY);
-  ctx.lineTo(arrowX, arrowY - 50)
-  ctx.moveTo(arrowX, arrowY);
-  ctx.lineTo(arrowX + 10, arrowY - 20);
-  ctx.moveTo(arrowX, arrowY);
-  ctx.lineTo(arrowX - 10, arrowY - 20);
-  ctx.stroke();
-}
-
-function drawArrows(arrowsX, arrowsY, arrowSpacer) {
-
-  for (var i = 0; i < 4; i++) {
-
+  for (var i = 0; i < 7; i++) {
     ctx.beginPath();
+    // ctx.rect(i * canvas.width / 4, 800, canvas.width / 4, 100);
+    ctx.strokeRect(i * canvas.width, 600, 100, 100)
+    // ctx.rect(i * canvas.width, 600, 100, 100);
 
-    ctx.rect(i * canvas.width / 4, 800, canvas.width / 4, 100);
-    ctx.fillStyle = colors[i];
-    ctx.fill();
   }
 
   ctx.font = "100px Arial";
   text("v", arrowsX, arrowsY + canvas.width / 16);
-  console.log(arrowsX, arrowsY + canvas.width / 16);
+  // ctx.rect(arrowX, arrowsY, canvas.width / 4, 100);
+
   text("b", arrowsX + canvas.width / 4, arrowsY + canvas.width / 13);
   text("n", arrowsX + 1.99 * canvas.width / 4, arrowsY + canvas.width / 16);
 
   text("m", arrowsX + 2.88 * canvas.width / 4, arrowsY + canvas.width / 16);
 
-  line(0, 800, 450, 800);
+  // line(0, 800, 450, 800);
 
-  for (var i = 1; i < 4; i++) {
-
-    line(i * canvas.width / 4, 800, i * canvas.width / 4, 900)
-  }
+  // for (var i = 1; i < 4; i++) {
+  //   line(i * canvas.width / 4, 800, i * canvas.width / 4, 900)
+  // }
 
 }
 
 
 var score = 0;
 var misses = 0
-// [x, y]
+// [x, y] x = col number and y = distance fallen
 var blocks = [[0, 0]];
 var speed = 5
 
@@ -132,18 +84,21 @@ setTimeout(makeBlock, 0);
 function makeBlock() {
 
   blocks.push([Math.round(Math.random() * 3), -canvas.width / 4])
-
+  console.log(Math.round(Math.random() * 3), -canvas.width / 4);
   setTimeout(makeBlock, 3 * 1000 / speed);
 }
 
-var falling = setInterval(fallingBlocks, 50 / 3);
+// var falling = setInterval(fallingBlocks, 50 / 3);
+
+drawArrows(30, 600)
+drawBlocks()
+makeBlock()
 
 
 
 function fallingBlocks() {
 
-  speed += 0.001
-
+  // speed += 0.001
   document.getElementById("speed").innerHTML = "Speed: " + Math.round(speed);
 
   document.getElementById("score").innerHTML = "Score: " + Math.round(score);
@@ -186,7 +141,7 @@ function fallingBlocks() {
 
 
 
-function keyDown() {
+function keyDown(event) {
   var key = event.key;
 
   // console.log(misses >= 20  );
@@ -267,7 +222,7 @@ function keyDown() {
   }
 
 
-  if (misses >= 200 && key == "r") {
+  if (misses >= 10 && key == "r") {
     score = 0;
     speed = 10;
     misses = 0;
