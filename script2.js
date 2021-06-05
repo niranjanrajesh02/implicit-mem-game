@@ -6,7 +6,7 @@ window.addEventListener("keydown", keyDown)
 canvas.width = 700;
 canvas.height = 700;
 
-let circles = [[0, 0]]
+// let circles = [[0, 0]]
 // const speed = 5;
 let score = 0;
 let gameOver = false;
@@ -28,62 +28,57 @@ function makeBase() {
   ctx.fillText("L", 630, 670)
 }
 
-// setTimeout(makeCircle, 0);
-function makeCircle() {
-  const possibleX = [150, 250, 350, 550, 650, 750]
-  let randomInd = Math.floor(Math.random() * possibleX.length);
-  circles.push([possibleX[randomInd], -canvas.width / 4])
-  console.log(circles);
-  setTimeout(makeCircle, 3 * 1000 / speed);
-}
-const circle = {
+
+const circles = [{
   x: 50,
   y: 50,
   radius: 50,
   dy: 2,
-  color: "black",
   hit: false
-}
+}]
 
-function drawCircle() {
-  if (circle.y < canvas.height) {
+function drawCircle(circle) {
+  // circle is only drawn till it touches the sink
+  if (circle.y + circle.radius < 600) {
     ctx.beginPath();
     ctx.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI)
     ctx.strokeStyle = circle.color;
     ctx.stroke();
   }
-  else {
-    gameOver = true;
-  }
 }
 
-function updatePos() {
+function updatePos(circle) {
   circle.y += circle.dy;
-  //when circle touches sink
-  if (circle.y + circle.radius >= 600) {
-    circle.radius = 0
-  }
 }
-
+let ind = 0;
 function update() {
-  if (gameOver) {
+  if (circles.length === 0) {
     alert("GAME OVER");
     document.location.reload();
     clearInterval(interval);
   }
+  document.getElementById("score").innerHTML = "Score: " + (score);
   ctx.clearRect(0, 0, canvas.width, canvas.height - 100);
-  drawCircle();
-  updatePos();
-  document.getElementById("score").innerHTML = "Score: " + Math.round(score);
+  drawCircle(circles[ind]);
+  updatePos(circles[ind]);
+
+
   requestAnimationFrame(update);
 }
 
 function keyDown(e) {
+  let circle = circles[ind]
   if (e.key == "s") {
-    if (circle.y + circle.radius >= 580 && circle.y + circle.radius < 700) {
+    if (circle.y + circle.radius >= 600 && circle.y + circle.radius < 700) {
       score += 1;
+      console.log(score);
+      circles.splice(0, 1);
+    }
+    else {
+      misses++;
     }
   }
+
 
 }
 makeBase();
